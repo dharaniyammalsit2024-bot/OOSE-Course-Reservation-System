@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Course Reservation System - DHARANI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);width:100%;max-width:1100px;overflow:hidden}
+.header{background:linear-gradient(135deg,#2c3e50,#4ca1af);color:white;padding:30px;text-align:center}
+.header h1{font-size:32px}
+.main{display:grid;grid-template-columns:300px 1fr;min-height:500px}
+.sidebar{background:#f8f9fa;padding:20px;border-right:1px solid #eee}
+.course-card{background:white;border-radius:12px;padding:15px;margin-bottom:15px;border-left:4px solid #667eea;box-shadow:0 2px 8px rgba(0,0,0,0.08);cursor:pointer}
+.course-card:hover{transform:translateY(-3px)}
+.content{padding:30px}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;margin-bottom:5px;font-weight:600;color:#2c3e50}
+.form-group input,.form-group select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:8px}
+.btn{background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:14px 30px;border-radius:8px;font-weight:bold;cursor:pointer;width:100%;font-size:16px}
+.success{background:#d4edda;color:#155724;padding:15px;border-radius:8px;margin-top:20px;display:none}
+@media(max-width:768px){.main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎓 Online Course Reservation System</h1>
+<p>DHARANIYAMMAL S - 07 - IT - OOSE Project - Fullscreen Edition</p>
+<p style="margin-top:10px">GitHub: dharaniyammalsit2024-bot/OOSE-Course-Reservation-System</p>
+</div>
+<div class="main">
+<div class="sidebar" id="courseList"><h3>📚 Available Courses</h3></div>
+<div class="content">
+<h2>📝 Reserve Your Course</h2>
+<p style="color:#666;margin:10px 0 20px">This link now opens the app directly!</p>
+<div class="form-group"><label>Student Name</label><input type="text" id="sName" placeholder="Enter your name"></div>
+<div class="form-group"><label>Email</label><input type="email" id="sEmail" placeholder="Enter email"></div>
+<div class="form-group"><label>Select Course</label><select id="sCourse"></select></div>
+<div class="form-group"><label>Mobile</label><input type="text" id="sMobile" placeholder="Enter mobile number"></div>
+<button class="btn" onclick="reserve()">🚀 Reserve Now</button>
+<div class="success" id="successMsg"></div>
+<div id="resItems" style="margin-top:20px"></div>
+</div>
+</div>
+</div>
+<script>
+const courses=[{id:1,name:"Java Programming",duration:"3 Months",price:"₹2999",faculty:"Dr. Kumar"},{id:2,name:"Python & Data Science",duration:"4 Months",price:"₹3999",faculty:"Dr. Priya"},{id:3,name:"Web Development (MERN)",duration:"5 Months",price:"₹4999",faculty:"Mr. Arjun"},{id:4,name:"OOSE - Full Course",duration:"2 Months",price:"₹1999",faculty:"Prof. Dharaniyammal"},{id:5,name:"Machine Learning",duration:"6 Months",price:"₹5999",faculty:"Dr. Sarah"},{id:6,name:"Cloud Computing - AWS",duration:"3 Months",price:"₹3499",faculty:"Mr. Rajesh"}];
+let reservations=JSON.parse(localStorage.getItem('reservations')||'[]');
+function loadCourses(){const list=document.getElementById('courseList');const sel=document.getElementById('sCourse');courses.forEach(c=>{list.innerHTML+=`<div class="course-card" onclick="document.getElementById('sCourse').value=${c.id}"><h3>${c.name}</h3><p>⏱ ${c.duration} | 👨‍🏫 ${c.faculty}</p><p style="color:#667eea;font-weight:bold">${c.price}</p></div>`;sel.innerHTML+=`<option value="${c.id}">${c.name} - ${c.price}</option>`;});displayReservations();}
+function reserve(){const name=document.getElementById('sName').value;const email=document.getElementById('sEmail').value;const courseId=document.getElementById('sCourse').value;if(!name||!email||!courseId){alert('Fill all fields!');return}const course=courses.find(c=>c.id==courseId);reservations.push({course:course.name,price:course.price,name,date:new Date().toLocaleDateString()});localStorage.setItem('reservations',JSON.stringify(reservations));document.getElementById('successMsg').style.display='block';document.getElementById('successMsg').innerHTML=`✅ Success! <b>${name}</b> reserved <b>${course.name}</b>`;displayReservations();}
+function displayReservations(){const div=document.getElementById('resItems');if(reservations.length==0){div.innerHTML='No reservations yet';return}div.innerHTML='<h3>✅ My Reservations</h3>'+reservations.map(r=>`<div style="background:#f8f9fa;padding:10px;border-radius:8px;margin-top:8px"><b>${r.course}</b> - ${r.price}<br><small>${r.name} - ${r.date}</small></div>`).join('');}
+loadCourses();
+</script>
+</body>
+</html>
